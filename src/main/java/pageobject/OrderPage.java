@@ -7,7 +7,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class OrderPage {
-    private WebDriver driver;
+    private final WebDriver driver;
 
     public OrderPage(WebDriver driver) {
         this.driver = driver;

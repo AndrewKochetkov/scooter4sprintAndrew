@@ -17,6 +17,7 @@ public class RentPage {
     private final By orderButton = By.xpath("//button[@class='Button_Button__ra12g Button_Middle__1CSJM']");
     private final By confirmYesButton = By.xpath("//button[text()='Да']");
     private final By modal = By.xpath("//div[@class='Order_Modal__YZ-d3']");
+    private final By showStatusButton = By.xpath("//button[contains(@class, 'Button_Middle__1CSJM') and text()='Посмотерть статус']");
 
     public void fillRentForm(String date, String rentalPeriod, String color, String comment) {
         WebElement dateInput = driver.findElement(dateField);
@@ -42,13 +43,7 @@ public class RentPage {
         driver.findElement(confirmYesButton).click();
     }
 
-    public boolean orderSuccessfullyPlaced(){
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        try {
-            WebElement modalElement = wait.until(ExpectedConditions.visibilityOfElementLocated(modal));
-            return modalElement.getText().contains("Заказ оформлен");
-        } catch (TimeoutException e) {
-            return false;
-        }
+    public void orderSuccessfullyPlaced(){
+        driver.findElement(showStatusButton).click();
     }
 }
