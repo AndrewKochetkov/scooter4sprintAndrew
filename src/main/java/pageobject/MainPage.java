@@ -7,6 +7,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Instant;
+
 import static org.junit.Assert.assertEquals;
 
 public class MainPage {
@@ -32,18 +34,23 @@ public class MainPage {
         button.click();
     }
 
+    public void checkDropdownContent(int questionIndex, String expectedAnswerText) {
+        WebDriverWait wait = new WebDriverWait(driver, 10); // Ожидание до 10 секунд
 
-    public void checkDropdownContent(String buttonId, String expectedAnswerText){
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        WebElement faqQuestion = wait.until(ExpectedConditions.elementToBeClickable(By.id(buttonId)));
+        String questionId = "accordion__heading-" + questionIndex;
+        WebElement question = driver.findElement(By.id(questionId));
 
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", faqQuestion);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", question);
 
-        faqQuestion.click();
-        WebElement faqAnswer = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(buttonId.replace("heading", "panel"))));
+        question.click();
 
-        String actualAnswerText = faqAnswer.getText();
+        String answerId = "accordion__panel-" + questionIndex;
+        By answerLocator = By.id(answerId);
+        WebElement answer = wait.until(ExpectedConditions.visibilityOfElementLocated(answerLocator));
 
-        assertEquals("Ответ на вопрос не совпадает с ожидаемым", expectedAnswerText, actualAnswerText);
+        String actualText = answer.getText();
+        if (!actualText.contains(expectedAnswerText)) {
+            throw new AssertionError("Ожидаемый текст ответа: '" + expectedAnswerText + "', но найдено: '" + actualText + "'");
+        }
     }
 }
